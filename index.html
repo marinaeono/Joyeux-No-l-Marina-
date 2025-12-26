@@ -5,9 +5,80 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>  </title>
   <style>
+
+	  <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Explorateur du site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            margin: 8px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📁 Contenu du site</h1>
+<p>Voici tous les dossiers et fichiers disponibles :</p>
+
+<ul id="file-list"></ul>
+
+<script>
+async function loadFiles() {
+    const repo = "marinaeono/Joyeux-Noel"; // Ton dépôt
+    const apiUrl = `https://api.github.com/repos/${repo}/contents/`;
+
+    async function listDirectory(url, parentElement) {
+        const response = await fetch(url);
+        const items = await response.json();
+
+        for (const item of items) {
+            const li = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = item.path;
+            link.textContent = item.path;
+
+            li.appendChild(link);
+            parentElement.appendChild(li);
+
+            // Si c'est un dossier, on le parcourt aussi
+            if (item.type === "dir") {
+                const subUl = document.createElement("ul");
+                li.appendChild(subUl);
+                await listDirectory(item.url, subUl);
+            }
+        }
+    }
+
+    const rootUl = document.getElementById("file-list");
+    await listDirectory(apiUrl, rootUl);
+}
+
+	  
     body {
       background: url("image/traineau.jpg") no-repeat center center fixed;
       background-size: cover;
@@ -469,6 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </body>
 
 </html>
+
 
 
 
